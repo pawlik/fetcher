@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-workinng_dir=$( pwd )
+working_dir=$( pwd )
 source ./lib/params.sh
 source ./lib/pipes.sh
 
@@ -9,7 +9,7 @@ tmp_dir=$(mktemp -d)
 export SHALLOW_CLONE_READY=$tmp_dir"/shallow_clone_pipe"
 mkfifo $SHALLOW_CLONE_READY
 
-SETUP_DIR_LINK=$workinng_dir"/app"
+SETUP_DIR_LINK=$working_dir"/app"
 
 fetcher_user_cache=$HOME"/.fetcher"
 repos_tmp_dir=$fetcher_user_cache"/repos_tmp"
@@ -54,3 +54,6 @@ else
     register_listener $SHALLOW_CLONE_READY make_tmp_from_clone &
 fi
 
+if [ -z "$unshallow" ]; then
+  echo "unshallow"
+fi
