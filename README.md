@@ -8,5 +8,6 @@ work in progress
 * [ ] test and finish path when there's tmp repo present
 * [ ] named pipes and paralel tasks make it seems like script hanged n(maybe this can be fixed)
 * [ ] could take a look on $HOME/.fetcher and automatically add teammater repos as remotes (just useful)
+* [ ] would be nice if it could know it's run on guest machine (Vagrant) and try to use Host tmp repo at first, this would allow utilizing cache even after destroying vagrat machie.
 
 
