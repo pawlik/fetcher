@@ -9,3 +9,7 @@ work in progress
 [ ] named pipes and paralel tasks make it seems like script hanged n(maybe this can be fixed)
 [ ] could take a look on $HOME/.fetcher and automatically add teammater repos as remotes (just useful)
 
+# why not bash?
+
+It's hard to make concurecy and not exit program before most crucial things are done (never sure if its done r not)
+
