@@ -1,0 +1,27 @@
+{
+  "name": "fetcher",
+  "version": "1.0.0",
+  "description": "Facilitates working with large repos",
+  "main": "fetcher.js",
+  "dependencies": {
+    "coffee": "^1.1.0",
+    "git-node": "^0.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pawlik/fetcher.git"
+  },
+  "keywords": [
+    "git"
+  ],
+  "author": "Grzegorz Pawlik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pawlik/fetcher/issues"
+  },
+  "homepage": "https://github.com/pawlik/fetcher#readme"
+}
