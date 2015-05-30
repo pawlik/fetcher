@@ -5,7 +5,8 @@
   "main": "fetcher.js",
   "dependencies": {
     "coffee": "^1.1.0",
-    "git-node": "^0.1.1"
+    "git-node": "^0.1.1",
+    "promise-js": "0.0.6"
   },
   "devDependencies": {},
   "scripts": {
