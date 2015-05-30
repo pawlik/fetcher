@@ -1,12 +1,13 @@
 Promise = require 'promise-js'
 
 repository_url = 'git@github.com:pawlik/centrum_faktur'
-clone_to = "/tmp/cf"
+clone_to = "/tmp/fetcher_cf"
 
 path = require 'path'
-tmp_path = path.join("/tmp/", repository_url)
+tmp_path = path.join("/tmp/fetcher", repository_url)
 
 spawn = require('child_process').spawn
+child_process = require('child_process')
 
 events = require('events')
 emitter = new events.EventEmitter()
@@ -27,68 +28,40 @@ isTmpPresent = ()->
 
 
 #
-clone_shallow = (from, to) ->
-  return console.log("> clone shallow from " + from + " to " + to)
+clone_shallow = (from, to, callback) ->
+  console.log("> clone shallow from " + from + " to " + to)
   clone = spawn "git", ['clone', from, to, '--depth',  '1']
   clone.stderr.on 'data', (data)-> console.error(data.toString())
   clone.stdout.on 'data', (data)-> console.log(data.toString())
   clone.on 'close', (code) ->
-    return emitter.emit 'codeFetched' if code == 0
+    return callback(code) if code == 0
     throw "clone shallow error, code returned: "+code
 #
-clone_mirror = (from, to) ->
-  return console.log "> clone mirror from " + from + "tp " + to
-#  clone = spawn "git", ['clone', from, to, '--mirror']
-#  clone.stderr.on 'data', (data)-> console.error(data.toString())
-#  clone.stdout.on 'data', (data)-> console.log(data.toString())
-#  clone.on 'close', (code) ->
-#    return emitter.emit 'tmpExists' if code == 0
-#    throw "clone tmp error, code returned: "+code
+clone_mirror = (from, to, repo_url, callback) ->
+  console.log "> clone mirror from " + from + " to " + to
+  clone = spawn "git", ['clone', from, to, '--mirror']
+  clone.stderr.on 'data', (data)-> console.error(data.toString())
+  clone.stdout.on 'data', (data)-> console.log(data.toString())
+  clone.on 'close', (code) ->
+    if code == 0
+      console.log "> do important stuff"
+      child_process.spawnSync "git", ["remote", "set-url", "origin", repo_url], {cwd: to}
+      child_process.spawnSync "git", ["fetch", "origin", "--unshallow"], {cwd: to}
+      return callback(code)
+    throw "clone tmp error, code returned: "+code
 
 if isTmpPresent()
   tmp_updated = new Promise (resolve)-> console.log("> updating tmp mirror"); resolve(true)
-  code_cloned = new Promise (resolve)-> tmp_updated.then ()-> clone_shallow(tmp_path, clone_to); resolve(true)
+  code_cloned = new Promise (resolve)-> tmp_updated.then ()-> clone_shallow(tmp_path, clone_to, resolve)
 else
-  code_cloned = new Promise ()-> clone_shallow(repository_url, clone_to)
-  tmp_ready = new Promise ()->
-    clone_mirror clone_to, tmp_path
-    console.log "> switch " + tmp_path + " remote to " + repository_url
-    console.log "> fetch --unshallow "
-    console.log "> make " + clone_to + "remote origin set to " + repository_url
-    console.log "> add remote 'tmp':" + tmp_path
-    consol.elog "> git fetch tmp --unshallow to unshallow code repo"
+  code_cloned = new Promise (resolve)-> clone_shallow(repository_url, clone_to, resolve)
 
+  tmp_ready = code_cloned.then ()->
+    # below should be detachable process
+    # https://iojs.org/api/child_process.html#child_process_options_detached
+    return new Promise (resolve)-> clone_mirror clone_to, tmp_path, repository_url, resolve
 
+  tmp_ready.then ()->
+    child_process.spawnSync "git", ["remote", "add", "tmp", tmp_path], {cwd: clone_to}
+    child_process.spawnSync "git", ["fetch", "tmp", "--unshallow"], {cwd: clone_to}
 
-#  emitter.on "codeFetched", ()->
-#    clone_mirror clone_to, tmp_path
-#
-#  console.log "make tmp from shallow clone"
-#  console.log "unshallow tmp"
-#  console.log "unshallow working dir"
-#  console.log "change origin to URL"
-#  console.log "add remote tmp pointing to tmp (not sure why ;))"
-
-
-
-
-
-
-#
-#
-#clone = spawn('git'
-#  [
-#    'clone'
-#    'git@github.com:pawlik/N3'
-#    '--depth', '1'
-#  ]
-#)
-#
-#clone.stderr.on 'data', (data)->
-#  console.error('error: ' + data)
-#
-#clone.stdout.on 'data', (data)->
-#  console.log('stdout: ' + data)
-#
-#clone.on 'close', (code)->
-#  console.log("Child ended with code " + code)
