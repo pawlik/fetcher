@@ -6,6 +6,8 @@
   "dependencies": {
     "coffee": "^1.1.0",
     "git-node": "^0.1.1",
+    "karma": "^0.12.35",
+    "mocha": "^2.2.5",
     "promise-js": "0.0.6"
   },
   "devDependencies": {},
