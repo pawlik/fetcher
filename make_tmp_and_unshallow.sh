@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+## make_tmp_and_unshallow.sh REPO_URL TMP CLONED_REPO
+script_name=$0
+repo_url=$1
+tmp=$2
+cloned_repo=$3
+
+git clone --progress --mirror $cloned_repo $tmp && \
+cd $tmp && \
+git remote set-url origin $repo_url && \
+git fetch --unshallow --progress && \
+cd $cloned_repo && \
+git remote add tmp $tmp && \
+git fetch tmp --unshallow --progress && \
+git fetch --all --progress
