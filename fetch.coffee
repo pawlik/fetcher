@@ -1,12 +1,13 @@
 Promise = require 'promise-js'
 
-repository_url = 'git@github.com:pawlik/centrum_faktur'
-clone_to = "/tmp/fetcher_cf"
+repository_url = 'git@github.com:pawlik/N3'
+clone_to = "/tmp/fetcher_N3"
 
 path = require 'path'
 tmp_path = path.join("/tmp/fetcher", repository_url)
 
 spawn = require('child_process').spawn
+spawnSync = require('child_process').spawnSync
 child_process = require('child_process')
 
 events = require('events')
@@ -25,23 +26,42 @@ isTmpPresent = ()->
       when e.code == 'ENOENT' then return false
       else throw e
 
+_stdio = ['ignore', process.stdout, process.stderr]
 
-
-#
 clone_shallow = (from, to, callback) ->
   console.log("> clone shallow from " + from + " to " + to)
   clone = spawn "git", ['clone', from, to, '--depth',  '1', '--progress'], {
-    stdio: ['ignore', process.stdout, process.stderr]
+    stdio: _stdio
   }
-  clone.stderr.on 'data', (data)-> console.error(data.toString())
-  clone.stdout.on 'data', (data)-> console.log(data.toString())
+  clone.on 'close', (code) ->
+    return callback(code) if code == 0
+    throw "clone shallow error, code returned: "+code
+
+clone = (from, to, callback) ->
+  console.log("> clone from " + from + " to " + to)
+  clone = spawn "git", ['clone', from, to, '--progress'], {
+    stdio: _stdio
+  }
   clone.on 'close', (code) ->
     return callback(code) if code == 0
     throw "clone shallow error, code returned: "+code
 
 if isTmpPresent()
-  tmp_updated = new Promise (resolve)-> console.log("> updating tmp mirror"); resolve(true)
-  code_cloned = new Promise (resolve)-> tmp_updated.then ()-> clone_shallow(tmp_path, clone_to, resolve)
+  tmp_updated = new Promise (resolve)->
+    console.log "> update tmp mirror"
+    child = spawn "git", ["remote", "update"], {
+      stdio: _stdio
+      cwd: tmp_path
+    }
+    child.on 'close', (code)->
+      return resolve(code) if code == 0
+      throw "tmp update error, code returned: "+code
+  code_cloned = new Promise (resolve)->
+    tmp_updated.then ()-> clone(tmp_path, clone_to, resolve)
+  code_cloned.then ()->
+    console.log "code cloned"
+    spawnSync "git", ["remote", "rename", "origin", "tmp"], {cwd: clone_to, stdio: _stdio}
+    spawnSync "git", ["remote", "add", "origin", repository_url], {cwd: clone_to, stdio: _stdio}
 else
   code_cloned = new Promise (resolve)-> clone_shallow(repository_url, clone_to, resolve)
 
