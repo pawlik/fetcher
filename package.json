@@ -2,13 +2,16 @@
   "name": "fetcher",
   "version": "1.0.0",
   "description": "Facilitates working with large repos",
-  "main": "fetcher.js",
+  "main": "fetch.js",
   "dependencies": {
     "coffee": "^1.1.0",
-    "git-node": "^0.1.1",
     "promise-js": "0.0.6"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "karma": "^0.12.35",
+    "karma-mocha": "^0.1.10",
+    "mocha": "^2.2.5"
+  },
   "scripts": {
     "test": "test"
   },
@@ -17,7 +20,8 @@
     "url": "git+https://github.com/pawlik/fetcher.git"
   },
   "keywords": [
-    "git"
+    "git",
+    "large-repos"
   ],
   "author": "Grzegorz Pawlik",
   "license": "ISC",
