@@ -1,3 +1,9 @@
+#Usage
+```
+iojs fetch.js --help to show help
+iojs fetch.js git@github.com:pawlik/repo_with_rich_history /home/work/i_will_work_here
+```
+
 # fetcher
 The main goal of this tool is to provide a fast way for cloning big repositories. It's focus is to bring 
 code as soon as possible, so you can continue in build script inside your repo (this is achieved by making

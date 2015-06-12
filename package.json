@@ -4,7 +4,9 @@
   "description": "Facilitates working with large repos",
   "main": "fetch.js",
   "dependencies": {
+    "blaster-command": "^0.5.1",
     "coffee": "^1.1.0",
+    "minimist": "^1.1.1",
     "promise-js": "0.0.6"
   },
   "devDependencies": {
