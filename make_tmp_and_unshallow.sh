@@ -13,3 +13,4 @@ cd $cloned_repo && \
 git remote add tmp $tmp && \
 git fetch tmp --unshallow --progress && \
 git fetch --all --progress
+echo $0" "$1" "$2" "$3" done!"

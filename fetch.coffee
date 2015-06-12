@@ -94,6 +94,13 @@ else
       detached: true
       stdio: ['ignore', out, err]
     }
+    console.log(
+      "> local mirror repo (#{tmp_path}) will be created in the background
+          \n\t\tboth #{tmp_path} and #{clone_to} will be unshallowed afterwards
+          \n\t\tyou can watch progress with tail -f #{command}.log
+          \n\t\tyou can use your code as soon as this script exits
+      "
+    )
     child.unref()
 
 
