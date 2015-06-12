@@ -9,18 +9,18 @@ child_process = require('child_process')
 events = require('events')
 emitter = new events.EventEmitter()
 
-
-argv = require('minimist')(process.argv.slice(2), {
-  boolean: ['help']
-
-})
 usage = "
 Usage:\n
 iojs #{process.argv[1]} <repository> <directory>
 \noptions:
-\n
---help\t\t show this help
+\n--branch\t branch to fetch (like in git clone --branch)
+\n--help\t\t show this help
 "
+argv = require('minimist')(process.argv.slice(2), {
+  boolean: ['help']
+  string: ['branch'],
+  default: {'branch': null},
+})
 console.log usage if argv.help
 
 repository_url = argv._[0]
@@ -45,9 +45,11 @@ isTmpPresent = ()->
 
 _stdio = ['ignore', process.stdout, process.stderr]
 
-clone_shallow = (from, to, callback) ->
+clone_shallow = (from, to, extraParams=[], callback) ->
   console.log("> clone shallow from " + from + " to " + to)
-  clone = spawn "git", ['clone', from, to, '--depth', '1', '--progress'], {
+  params = ['clone', from, to, '--depth', '1', '--progress']
+  params = params.concat(extraParams)
+  clone = spawn "git", params, {
     stdio: _stdio
   }
   clone.on 'close', (code) ->
@@ -81,9 +83,18 @@ if isTmpPresent()
                       "tmp"], {cwd: clone_to, stdio: _stdio}
     spawnSync "git", ["remote", "add", "origin",
                       repository_url], {cwd: clone_to, stdio: _stdio}
+    spawnSync "git", [
+      "config",
+      "--replace-all",
+      "remote.origin.fetch",
+      "+refs/heads/*:refs/remotes/origin/*"
+    ], {cwd: clone_to}
+    spawnSync "git", ["fetch", "origin"], {cwd: clone_to}
 else
-  code_cloned = new Promise (resolve)-> clone_shallow(repository_url, clone_to,
-    resolve)
+  cloneParams = []
+  cloneParams = ['--branch', argv.branch ] if argv.branch
+  code_cloned = new Promise (resolve)-> clone_shallow(
+    repository_url, clone_to, cloneParams, resolve)
 
   tmp_ready = code_cloned.then ()->
     fs = require "fs"
