@@ -1,22 +1,25 @@
 {
   "name": "fetcher",
-  "version": "1.0.0",
+  "version": "1.0.0beta",
   "description": "Facilitates working with large repos",
   "main": "fetch.js",
   "dependencies": {
-    "blaster-command": "^0.5.1",
-    "coffee": "^1.1.0",
     "minimist": "^1.1.1",
     "promise-js": "0.0.6"
   },
   "devDependencies": {
     "karma": "^0.12.35",
     "karma-mocha": "^0.1.10",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "coffee": "^1.1.0"
   },
   "scripts": {
     "test": "test"
   },
+  "bin": {
+    "fetch": "./bin/fetch"
+  },
+  "preferGlobal": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pawlik/fetcher.git"

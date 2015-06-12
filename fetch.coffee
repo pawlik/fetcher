@@ -19,7 +19,7 @@ iojs #{process.argv[1]} <repository> <directory>
 argv = require('minimist')(process.argv.slice(2), {
   boolean: ['help']
   string: ['branch'],
-  default: {'branch': null},
+  default: {branch: 'master'},
 })
 console.log usage if argv.help
 
@@ -56,14 +56,20 @@ clone_shallow = (from, to, extraParams=[], callback) ->
     return callback(code) if code == 0
     throw "clone shallow error, code returned: " + code
 
-clone = (from, to, callback) ->
+clone = (from, to, extraParams=[], callback) ->
   console.log("> clone from " + from + " to " + to)
-  clone = spawn "git", ['clone', from, to, '--progress'], {
+  params = ['clone', from, to, '--progress']
+  params = params.concat(extraParams)
+  clone = spawn "git", params, {
     stdio: _stdio
   }
   clone.on 'close', (code) ->
     return callback(code) if code == 0
     throw "clone shallow error, code returned: " + code
+
+
+cloneParams = []
+cloneParams = ['--branch', argv.branch ] if argv.branch
 
 if isTmpPresent()
   tmp_updated = new Promise (resolve)->
@@ -76,7 +82,7 @@ if isTmpPresent()
       return resolve(code) if code == 0
       throw "tmp update error, code returned: " + code
   code_cloned = new Promise (resolve)->
-    tmp_updated.then ()-> clone(tmp_path, clone_to, resolve)
+    tmp_updated.then ()-> clone(tmp_path, clone_to, cloneParams, resolve)
   code_cloned.then ()->
     console.log "code cloned"
     spawnSync "git", ["remote", "rename", "origin",
@@ -91,8 +97,6 @@ if isTmpPresent()
     ], {cwd: clone_to}
     spawnSync "git", ["fetch", "origin"], {cwd: clone_to}
 else
-  cloneParams = []
-  cloneParams = ['--branch', argv.branch ] if argv.branch
   code_cloned = new Promise (resolve)-> clone_shallow(
     repository_url, clone_to, cloneParams, resolve)
 

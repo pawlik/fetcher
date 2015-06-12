@@ -1,0 +1,2 @@
+#!/usr/bin/env /bin/sh
+node fetch.js "$@"
