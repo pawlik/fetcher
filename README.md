@@ -3,8 +3,11 @@
 iojs fetch.js --help to show help
 iojs fetch.js git@github.com:pawlik/repo_with_rich_history /home/work/i_will_work_here
 ```
+# Note
+This code is still in a mess phase. I focused on making it usable ASAP, still 
+need to tidy it up and figure out how to design automatic tests
 
-# fetcher
+# Fetcher
 The main goal of this tool is to provide a fast way for cloning big repositories. It's focus is to bring 
 code as soon as possible, so you can continue in build script inside your repo (this is achieved by making
 so called shallow repo). 
@@ -38,9 +41,4 @@ to build your app.
 * [x] DONE :process dependencies are managed on iojs level: named pipes and paralel tasks make it seems like script hanged n(maybe this can be fixed)
 * [ ] could take a look on $HOME/.fetcher and automatically add teammater repos as remotes (just useful)
 * [ ] would be nice if it could know it's run on guest machine (Vagrant) and try to use Host tmp repo at first, this would allow utilizing cache even after destroying vagrat machie.
-
-
-# why not bash?
-
-It's hard to make concurecy and not exit program before most crucial things are done (never sure if its done r not)
 

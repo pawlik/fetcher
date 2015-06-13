@@ -1,3 +1,2 @@
-#!/usr/bin/env /bin/sh
-echo `pwd`
-node fetch.js "$@"
+#!/usr/bin/env node
+require('../command').run(process.argv)
