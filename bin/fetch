@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../command').run(process.argv)
+require('../fetch_runner').run(process.argv)

@@ -25,5 +25,4 @@ exports.run = (argv)->
   fetcher = require('./fetch')
   console.log(repository_url, clone_to)
   console.dir(argv)
-  process.exit();
   fetcher.run(repository_url, clone_to, argv)
