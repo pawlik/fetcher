@@ -1,2 +1,6 @@
 #!/usr/bin/env node
-require('../fetch_runner').run(process.argv)
+var path = require('path');
+var fs   = require('fs');
+var lib  = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
+
+require(lib + '/fetch_runner').run(process.argv)
