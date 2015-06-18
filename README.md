@@ -37,8 +37,4 @@ to build your app.
 - when there's no tmp repo mirror it'll fetch shallow, repo, then create (also shallow) tmp repo. With `--shallow` it will then unshallow tmp, and then unshallow fetched app. 
 
 # todo
-* [ ] test and finish path when there's tmp repo present
-* [x] DONE :process dependencies are managed on iojs level: named pipes and paralel tasks make it seems like script hanged n(maybe this can be fixed)
-* [ ] could take a look on $HOME/.fetcher and automatically add teammater repos as remotes (just useful)
-* [ ] would be nice if it could know it's run on guest machine (Vagrant) and try to use Host tmp repo at first, this would allow utilizing cache even after destroying vagrat machie.
-
+See gh issues
