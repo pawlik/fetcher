@@ -1,6 +1,6 @@
 {
   "name": "git-fetcher",
-  "version": "1.0.0-beta-6",
+  "version": "1.0.0-beta-7",
   "description": "Facilitates working with large repos",
   "main": "fetch_runner.js",
   "dependencies": {
