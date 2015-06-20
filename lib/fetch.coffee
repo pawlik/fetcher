@@ -18,7 +18,12 @@ exports.run = (repository_url, clone_to, argv)->
 
   isTmpPresent = ()->
     try
-      fs.accessSync tmp_path
+      # older versions of iojs/node doesn't have accessSync yet
+      # on the other hand - existsSync will be depracated
+      if fs.accessSync
+        fs.accessSync tmp_path
+      else
+        fs.existsSync tmp_path
       return true
     catch e
       switch true
