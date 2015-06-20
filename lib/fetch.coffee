@@ -23,7 +23,7 @@ exports.run = (repository_url, clone_to, argv)->
       if fs.accessSync
         fs.accessSync tmp_path
       else
-        fs.existsSync tmp_path
+        return fs.existsSync tmp_path
       return true
     catch e
       switch true
